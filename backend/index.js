@@ -33,6 +33,11 @@ function setupWeb() {
   const frontendPath = path.join(__dirname, "../frontend/dist");
   const web = express();
   web.disable("x-powered-by");
+  web.use(express.json());
+  web.use(morgan("dev"));
+  
+  web.use("/api", router);
+  web.use(errorHandler);
 
   web.use(express.static(frontendPath));
   web.get("*", (req, res) => {
@@ -47,7 +52,7 @@ function setupWeb() {
 async function main() {
   try {
     await prisma.$connect();
-    console.log("=> ConexiÃ³n a PostgreSQL establecida");
+    console.log("=> Conexión a PostgreSQL establecida");
     setupAPI();
     setupWeb();
     console.log("=> Servidores iniciados");
